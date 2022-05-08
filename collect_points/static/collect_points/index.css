@@ -84,6 +84,7 @@ a:active {
     border-radius: 0 0.25rem 0.25rem 0;
     border: 1px solid gray;
     cursor: pointer;
+    outline: none;
 }
 
 .search-input button:hover {
@@ -94,34 +95,46 @@ a:active {
     box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 15%);
 }
 
-.search-list {
+.collect-points-list {
     display: flex;
     flex-flow: column nowrap;
     list-style: none;
     margin: 0 -2rem;
 }
 
-.search-list__loading {
+.collect-points-list__loading {
     padding: 1rem 2rem;
     text-align: center;
     color: gray;
 }
 
-.search-list__item {
+.collect-points-list__item {
     display: flex;
     flex-flow: column;
     gap: 0.5rem;
     background: white;
-    /* The 2rem part must match the negative margin in `.search-list`. */
+    /* The 2rem part must match the negative margin in `.collect-points-list`. */
     padding: 1rem 2rem;
     border-bottom: 1px solid lightgray;
     cursor: pointer;
 }
 
-.search-list__item:first-child {
+.collect-points-list__item:first-child {
     border-top: 1px solid lightgray;
 }
 
-.search-list__item:hover {
+.collect-points-list__item:hover {
     background-color: rgb(240, 240, 240);
+}
+
+.search-list {
+    list-style: none;
+    display: flex;
+    flex-flow: column;
+    gap: 0.5rem;
+}
+
+.search-list__title {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
 }

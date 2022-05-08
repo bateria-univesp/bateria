@@ -14,6 +14,14 @@
  * @type {{[index: number]: CollectPoint}}
  */
 const collectPointsById = {};
+/**
+ * @type {google.maps.places.PlacesService | null}
+ */
+let placesService = null;
+/**
+ * @type {google.maps.Map | null}
+ */
+let map = null;
 
 /**
  * @returns {CollectPoint[]}
@@ -36,7 +44,8 @@ function loadMap() {
             zoom: 15,
             mapTypeControl: false,
             fullscreenControl: false,
-            streetViewControl: false
+            streetViewControl: false,
+            mapId: '77c239c51543e29e'
         });
     }
 
@@ -81,17 +90,17 @@ function loadMap() {
     /**
      * @param {CollectPoint[]} collectPoints
      */
-    function loadSearch(collectPoints) {
-        const searchList = document.querySelector('.search-list');
+    function loadList(collectPoints) {
+        const list = document.querySelector('.collect-points-list');
 
         // Empty the list to remove the loading state placeholder
-        searchList.innerHTML = '';
+        list.innerHTML = '';
 
         for (const point of collectPoints) {
-            searchList.innerHTML += `
-<li class="search-list__item" onclick="onFocusCollectPoint(${point.id})">
+            list.innerHTML += `
+<li class="collect-points-list__item" onclick="onFocusCollectPoint(${point.id})">
     <h2>${point.name}</h2>
-    <div class="search-list__item__field">
+    <div class="collect-points-list__item__field">
         <p>${point.description}</p>
     </div>
 </li>
@@ -101,10 +110,10 @@ function loadMap() {
 
     const collectPoints = getCollectPoints();
     collectPoints.forEach(x => collectPointsById[x.id] = x);
-    const map = createMap();
+    map = createMap();
 
     loadMarkers(collectPoints, map);
-    loadSearch(collectPoints, map);
+    loadList(collectPoints);
 }
 
 /**
@@ -114,9 +123,86 @@ function onFocusCollectPoint(id) {
     const collectPoint = collectPointsById[id];
 
     if (!collectPoint) {
-        throw Error(`Collect point not found (ID=${id})`);
+        throw Error(`Collect point not found (ID=${id}).`);
     }
 
     collectPoint.__marker.getMap().setCenter(collectPoint.__marker.getPosition());
     collectPoint.__marker.get('onclick')();
 }
+
+/**
+ * @param {Event} event
+ */
+function onSearchSubmit(event) {
+    event.preventDefault();
+
+    if (!map) {
+        throw Error('The map hasn\'t been initialized.');
+    }
+
+    if (!placesService) {
+        placesService = new google.maps.places.PlacesService(map);
+    }
+
+    /**
+     * @type {HTMLInputElement}
+     */
+    const searchInput = document.getElementById('search-input');
+    const searchList = document.querySelector('.search-list');
+    const collectPointsList = document.querySelector('.collect-points-list');
+
+    function clearInput() {
+        searchInput.value = '';
+        updateLayout();
+    }
+
+    function updateLayout() {
+        const hasSearch = Boolean(searchInput.value.trim());
+
+        searchList.style.display = hasSearch ? '' : 'none';
+        collectPointsList.style.display = hasSearch ? 'none' : '';
+    }
+
+    function updateSearchResults() {
+        if (searchInput.value) {
+            placesService.findPlaceFromQuery(
+                {
+                    query: searchInput.value,
+                    fields: ['name', 'geometry.location'],
+                    locationBias: 'IP_BIAS'
+                },
+                (results, status) => {
+                    searchList.innerHTML = '';
+
+                    if (status === google.maps.places.PlacesServiceStatus.OK) {
+                        searchList.innerHTML += `<p class="search-list__title">Resultados:</p>`;
+                        for (const result of results) {
+                            searchList.innerHTML += `
+<li class="search-list__item">
+    <a href="#">${result.name}</a>
+</li>
+                                `;
+
+                            searchList.lastElementChild.addEventListener('click', () => {
+                                map.setCenter(result.geometry.location);
+                                clearInput();
+                            });
+                        }
+                    } else if (status === google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
+                        searchList.innerHTML = '<p>Nenhum resultado encontrado.</p>';
+                    } else {
+                        alert('Algo deu errado. Tente novamente mais tarde.');
+                    }
+                }
+            )
+            ;
+        }
+    }
+
+    updateLayout();
+    updateSearchResults();
+}
+
+window.addEventListener('load', () => {
+    document.getElementById('search-form').addEventListener('submit', onSearchSubmit);
+});

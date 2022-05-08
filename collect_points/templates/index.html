@@ -16,17 +16,21 @@
 <div id="search">
     <h1>Pontos de Coleta</h1>
     <h3>Descubra pontos de coleta de pilhas e bateria na sua localidade.</h3>
-    <div class="search-options" style="display: none">
-        <label class="search-input">
-            <input type="search" placeholder="Busque no Google Maps">
-            <button type="submit">Buscar</button>
-        </label>
+    <div class="search-options">
+        <form id="search-form">
+            <label class="search-input">
+                <input type="search" placeholder="Busque no Google Maps" id="search-input" autocomplete="off">
+                <button type="submit">Buscar</button>
+            </label>
+        </form>
         <a href="#">
             <small>Usar minha localização atual</small>
         </a>
     </div>
     <ul class="search-list">
-        <li class="search-list__loading">
+    </ul>
+    <ul class="collect-points-list">
+        <li class="collect-points-list__loading">
             Loading...
         </li>
     </ul>
@@ -34,6 +38,7 @@
 <div id="map"></div>
 {{ collect_points|json_script:'collect_points' }}
 <script src="{% static 'collect_points/index.js' %}" defer></script>
-<script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=loadMap" defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=loadMap"
+        defer></script>
 </body>
 </html>
