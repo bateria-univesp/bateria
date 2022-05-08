@@ -203,6 +203,20 @@ function onSearchSubmit(event) {
     updateSearchResults();
 }
 
+function onUseCurrentLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => map.setCenter({
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            })
+        );
+    } else {
+        alert('Seu browser não suporta geolocalização.');
+    }
+}
+
 window.addEventListener('load', () => {
     document.getElementById('search-form').addEventListener('submit', onSearchSubmit);
+    document.getElementById('use-current-location').addEventListener('click', onUseCurrentLocation);
 });
