@@ -207,10 +207,13 @@ function onSearchSubmit(event) {
 function onUseCurrentLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
-            (position) => map.setCenter({
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            })
+            (position) => {
+                map.setCenter({
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                });
+                map.setZoom(15);
+            }
         );
     } else {
         alert('Seu browser não suporta geolocalização.');
