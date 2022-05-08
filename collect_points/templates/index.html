@@ -7,14 +7,33 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" type="text/css" href="{% static 'collect_points/index.css' %}">
+    <script>
+        const values = [];
+    </script>
     <title>Bateria</title>
 </head>
 <body>
-<h1>Pontos de Coleta</h1>
-<ul>
-    {% for point in collect_points %}
-        <li>{{ point.name }}</li>
-    {% endfor %}
-</ul>
+<div id="search">
+    <h1>Pontos de Coleta</h1>
+    <h3>Descubra pontos de coleta de pilhas e bateria na sua localidade.</h3>
+    <div class="search-options" style="display: none">
+        <label class="search-input">
+            <input type="search" placeholder="Busque no Google Maps">
+            <button type="submit">Buscar</button>
+        </label>
+        <a href="#">
+            <small>Usar minha localização atual</small>
+        </a>
+    </div>
+    <ul class="search-list">
+        <li class="search-list__loading">
+            Loading...
+        </li>
+    </ul>
+</div>
+<div id="map"></div>
+{{ collect_points|json_script:'collect_points' }}
+<script src="{% static 'collect_points/index.js' %}" defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=loadMap" defer></script>
 </body>
 </html>
