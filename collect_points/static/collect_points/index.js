@@ -160,6 +160,7 @@ function onSearchSubmit(event) {
         const hasSearch = Boolean(searchInput.value.trim());
 
         searchList.style.display = hasSearch ? '' : 'none';
+        searchList.innerHTML = '';
         collectPointsList.style.display = hasSearch ? 'none' : '';
     }
 
@@ -168,7 +169,7 @@ function onSearchSubmit(event) {
             placesService.findPlaceFromQuery(
                 {
                     query: searchInput.value,
-                    fields: ['name', 'geometry.location'],
+                    fields: ['name', 'geometry.viewport'],
                     locationBias: 'IP_BIAS'
                 },
                 (results, status) => {
@@ -184,7 +185,7 @@ function onSearchSubmit(event) {
                                 `;
 
                             searchList.lastElementChild.addEventListener('click', () => {
-                                map.setCenter(result.geometry.location);
+                                map.fitBounds(result.geometry.viewport);
                                 clearInput();
                             });
                         }
