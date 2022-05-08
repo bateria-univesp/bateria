@@ -138,3 +138,27 @@ a:active {
     margin-top: 1rem;
     margin-bottom: 0.5rem;
 }
+
+@media screen and (max-width: 576px) {
+    body {
+        flex-flow: column;
+    }
+
+    #search {
+        width: unset;
+        padding-bottom: 0;
+    }
+
+    #search :is(h1, h3) {
+        display: none;
+    }
+
+    .search-list, .collect-points-list {
+        max-height: 140px;
+        overflow-y: auto;
+    }
+
+    .collect-points-list__item__field {
+        display: none;
+    }
+}
