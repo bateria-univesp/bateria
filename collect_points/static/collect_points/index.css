@@ -13,6 +13,7 @@ body {
 
 a {
     color: gray;
+    transition: 0.5s;
 }
 
 a:hover {
@@ -43,14 +44,19 @@ a:active {
     top: 0;
     bottom: 0;
     left: 0;
-    background: white;
     padding: 2rem;
-    box-shadow: 0 0 1rem rgba(0, 0, 0, 15%);
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 30%);
     z-index: 1;
+    overflow: hidden;
+}
+#search{
+    background-color: rgba(255, 255, 255, 60%);
+    backdrop-filter: saturate(150%) blur(10px);
 }
 
 #search h1 {
     margin-bottom: 0.25rem;
+    color: #333;
 }
 
 #search h3 {
@@ -66,40 +72,75 @@ a:active {
 .search-input {
     display: flex;
     align-items: center;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
 }
 
 .search-input input {
     flex-grow: 1;
-    padding: 0.5rem 0.75rem;
+    padding: 0.75rem;
     border-radius: 0.25rem 0 0 0.25rem;
-    border: 1px solid gray;
+    border: 2px solid #f4f4f4;
     outline: none;
+    font-size: 16px;
+    color: #333;
+    background: #f4f4f4;
+    box-sizing: border-box;
+    transition: .5s;
 }
 
 .search-input button {
-    padding: 0.5rem 0.75rem;
+    height: 45.76px;
+    width: 45.76px;
+    padding: calc(0.75rem + 2px);
     background-color: gray;
     color: white;
     border-radius: 0 0.25rem 0.25rem 0;
-    border: 1px solid gray;
+    border:none;
     cursor: pointer;
     outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    background-image: linear-gradient(90deg, #11998e, #38ef7d);
+    transition: .5s;
+}
+
+.search-input button:active{
+    background-color: #11998e;
 }
 
 .search-input button:hover {
-    background-color: dimgray;
+    filter: hue-rotate(45deg);
 }
 
-.search-input :is(button, input):focus {
-    box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 15%);
+.search-input button img{
+    width: 20px;
+}
+
+.search-input :is(input):focus {
+    background-color: white;
+    border-color: #11998e;
 }
 
 .collect-points-list {
+    height: 61vh;
     display: flex;
     flex-flow: column nowrap;
     list-style: none;
-    margin: 0 -2rem;
+    /*margin: 0 -2rem;*/
+    margin: 2rem -2rem 0 -2rem;
+    overflow-y: scroll;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+::-webkit-scrollbar-track {
+    background: lightgray;
+}
+::-webkit-scrollbar-thumb {
+    background: #aeaeae;
 }
 
 .collect-points-list__loading {
@@ -112,11 +153,15 @@ a:active {
     display: flex;
     flex-flow: column;
     gap: 0.5rem;
-    background: white;
     /* The 2rem part must match the negative margin in `.collect-points-list`. */
     padding: 1rem 2rem;
     border-bottom: 1px solid lightgray;
     cursor: pointer;
+    transition: .25s;
+}
+
+.collect-points-list__item h2{
+    color: #333;
 }
 
 .collect-points-list__item:first-child {
@@ -125,6 +170,9 @@ a:active {
 
 .collect-points-list__item:hover {
     background-color: rgb(240, 240, 240);
+}
+.collect-points-list__item:active{
+    background-color: #38ef7d;
 }
 
 .search-list {
@@ -139,15 +187,116 @@ a:active {
     margin-bottom: 0.5rem;
 }
 
+.mobile-nav {
+    width: 100%;
+    align-items: center;
+    padding: 5% 0;
+    position: fixed;
+    bottom: 0;
+    background-image: linear-gradient(to top, white, transparent);
+    display: none;
+    z-index: 2;
+}
+.mobile-nav ul {
+    display: flex;
+    justify-content: space-around;
+}
+.mobile-nav ul li {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    background-image: linear-gradient(45deg, #11998e, #38ef7d);
+
+    list-style-type: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+}
+.mobile-nav ul li > hr{
+    width: 66%;
+    height: 3px;
+    border: none;
+    background: white;
+    position: absolute;
+    transition: .5s;
+}
+.mobile-nav ul li > hr:first-child{
+    top: calc(35% - 3px);
+}
+.mobile-nav ul li > hr:last-child{
+    bottom: calc(35% - 3px);
+}
+.mobile-nav ul li.on{
+   filter: hue-rotate(220deg) saturate(50);
+}
+.mobile-nav ul li.on > hr:first-child{
+    top: calc(50% - 1.5px);
+    transform: rotate(45deg);
+}
+.mobile-nav ul li.on > hr:nth-child(2){
+    opacity: 0;
+}
+.mobile-nav ul li.on > hr:last-child{
+    bottom: calc(50% - 1.5px);
+    transform: rotate(-45deg);
+}
+
+#loading-section {
+    position: fixed;
+    top: 0; bottom: 0; right: 0; left: 0;
+    background: white;
+    z-index: 9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    transition: 1s;
+}
+#loading-section div {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+#loading-section div img {
+    width: 80px;
+    height: 80px;
+}
+#loading-section.loaded img {
+    filter: none;
+    opacity: 1;
+}
+#loading-section div h4 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 8px;
+    margin-top: 2rem;
+    color: #696969;
+}
+#loading-section.loaded{
+    opacity: 0;
+    visibility: hidden;
+}
+
 @media screen and (max-width: 576px) {
     body {
         flex-flow: column;
     }
 
     #search {
-        width: unset;
+        width: 100%;
+        height: 100vh;
         padding-bottom: 0;
+        left: -100vh;
+        box-sizing:border-box;
+        position: fixed;
+        transition: .5s;
     }
+    #search.on{
+        left: 0;
+    }
+
 
     #search :is(h1, h3) {
         display: none;
@@ -160,5 +309,8 @@ a:active {
 
     .collect-points-list__item__field {
         display: none;
+    }
+    .mobile-nav{
+        display: block;
     }
 }
