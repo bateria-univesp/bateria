@@ -230,6 +230,7 @@ function showSearch(){
     else{
         show_search.classList.add('on');
         list_button.classList.add('on');
+
     }
 };
 

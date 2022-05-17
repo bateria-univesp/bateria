@@ -274,7 +274,7 @@ a:active {
     margin-top: 2rem;
     color: #696969;
 }
-#loading-section.loaded{
+#loading-section.loaded {
     opacity: 0;
     visibility: hidden;
 }
