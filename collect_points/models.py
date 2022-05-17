@@ -4,10 +4,10 @@ from django.db import models
 class CollectPoint(models.Model):
     latitude = models.FloatField(default=0, verbose_name='Latitude')
     longitude = models.FloatField(default=0, verbose_name='Longitude')
-    name = models.CharField(max_length=64, verbose_name='Nome')
-    description = models.CharField(max_length=256, verbose_name='Descrição')
+    name = models.CharField(max_length=128, verbose_name='Nome')
+    description = models.CharField(max_length=512, verbose_name='Descrição')
     logo_url = models.CharField(max_length=1024, verbose_name='URL da Imagem')
-    
+
     def __str__(self):
         return self.name
 
