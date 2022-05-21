@@ -22,6 +22,10 @@ let placesService = null;
  * @type {google.maps.Map | null}
  */
 let map = null;
+/**
+ * @type {google.maps.InfoWindow | null}
+ */
+let infoWindow = null;
 
 /**
  * @returns {CollectPoint[]}
@@ -49,6 +53,12 @@ function loadMap() {
         });
     }
 
+    function initializeInfoWindowIfNeeded() {
+        if (!infoWindow) {
+            infoWindow = new google.maps.InfoWindow();
+        }
+    }
+
     /**
      * @param {CollectPoint[]} collectPoints
      * @param {google.maps.Map} map
@@ -58,11 +68,10 @@ function loadMap() {
             const marker = new google.maps.Marker({
                 position: new google.maps.LatLng(point.latitude, point.longitude),
                 map: map,
-                title: point.name
+                title: point.name,
             });
 
-            const infoWindow = new google.maps.InfoWindow({
-                content: `
+            marker.set('content', `
 <div class="map-marker">
     <h1>${point.name}</h1>
     <div class="map-marker-field">
@@ -70,10 +79,11 @@ function loadMap() {
         <p>${point.description}</p>
     </div>
 </div>
-                `,
-            });
+            `);
 
             marker.set('onclick', () => {
+                initializeInfoWindowIfNeeded();
+                infoWindow.setContent(marker.get('content'));
                 infoWindow.open({
                     anchor: marker,
                     map: map,
