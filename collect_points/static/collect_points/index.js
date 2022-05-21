@@ -40,8 +40,8 @@ function loadMap() {
      */
     function createMap() {
         return new google.maps.Map(document.getElementById('map'), {
-            center: {lat: -23.5552229, lng: -46.4130287},
-            zoom: 15,
+            center: {lat: -23.6076277, lng: -46.6017167},
+            zoom: 11.25,
             mapTypeControl: false,
             fullscreenControl: false,
             streetViewControl: false,
