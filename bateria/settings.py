@@ -32,10 +32,11 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = bool(os.getenv('DEBUG')) if os.getenv('DEBUG') is not None else False
 
 ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'localhost',
     'bateria-univesp.herokuapp.com'
 ]
+
+if DEBUG:
+    ALLOWED_HOSTS.extend(['127.0.0.1', 'localhost'])
 
 # Application definition
 
