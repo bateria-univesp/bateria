@@ -118,7 +118,7 @@ a:active {
     flex-flow: column nowrap;
     list-style: none;
     margin: 0 -2rem;
-    overflow-y: auto;
+    overflow-y: scroll;
     border-top: 1px solid lightgray;
 }
 
