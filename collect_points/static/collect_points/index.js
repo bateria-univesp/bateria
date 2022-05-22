@@ -186,7 +186,7 @@ async function loadMap() {
             if (map.getZoom() < interactivityZoom) {
                 list.innerHTML = `
 <li class="collect-points-list__loading">
-    Dê zoom em uma área do mapa
+    Aproxime em uma área do mapa
     <br>
     para ver detalhes de pontos de coleta.
 </li>
