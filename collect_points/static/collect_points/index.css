@@ -113,6 +113,7 @@ a:active {
 }
 
 .collect-points-list {
+    flex-grow: 1;
     display: flex;
     flex-flow: column nowrap;
     list-style: none;
@@ -125,6 +126,7 @@ a:active {
     padding: 1rem 2rem;
     text-align: center;
     color: gray;
+    margin: auto;
 }
 
 .collect-points-list__item {

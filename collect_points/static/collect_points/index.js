@@ -136,7 +136,6 @@ function loadMap() {
     map = createMap();
 
     loadMarkers(collectPoints, map);
-    loadList(collectPoints);
 }
 
 /**
