@@ -27,6 +27,8 @@ let map = null;
  */
 let infoWindow = null;
 
+const interactivityZoom = 15;
+
 /**
  * @returns {CollectPoint[]}
  */
@@ -101,7 +103,7 @@ async function loadMap() {
                 });
 
                 const navigationUrl = new URL('https://www.google.com/maps/dir/');
-                navigationUrl.searchParams.set('api', 1);
+                navigationUrl.searchParams.set('api', '1');
                 navigationUrl.searchParams.set('destination', point.address);
 
                 marker.set('content', `
@@ -118,9 +120,8 @@ async function loadMap() {
             `);
 
                 marker.set('onclick', () => {
-                    const minMapZoom = 15;
-                    if (map.getZoom() <= minMapZoom) {
-                        map.setZoom(minMapZoom);
+                    if (map.getZoom() <= interactivityZoom) {
+                        map.setZoom(interactivityZoom);
                     }
                     map.setCenter(marker.getPosition());
 
@@ -161,32 +162,117 @@ async function loadMap() {
             }
         });
 
+        /**
+         * The 'tilesloaded' event is used here because it's triggered less often
+         * than 'bounds_changed', for example, and this speeds up the website.
+         */
         google.maps.event.addListener(map, 'tilesloaded', () => {
-            const mapBounds = map.getBounds();
+            const bounds = map.getBounds();
             clusterer.clearMarkers();
-            clusterer.addMarkers(markers.filter(marker => mapBounds.contains(marker.getPosition())));
+            clusterer.addMarkers(markers.filter(marker => bounds.contains(marker.getPosition())));
         });
     }
 
     /**
      * @param {CollectPoint[]} collectPoints
      */
-    function loadList(collectPoints) {
+    async function loadList(collectPoints) {
         const list = document.querySelector('.collect-points-list');
 
         // Empty the list to remove the loading state placeholder
         list.innerHTML = '';
 
-        for (const point of collectPoints) {
-            list.innerHTML += `
+        if (collectPoints.length === 0) {
+            if (map.getZoom() < interactivityZoom) {
+                list.innerHTML = `
+<li class="collect-points-list__loading">
+    Dê zoom em uma área do mapa
+    <br>
+    para ver detalhes de pontos de coleta.
+</li>
+            `;
+            } else {
+              list.innerHTML = `
+<li class="collect-points-list__loading">
+    <p style="margin-bottom: 0.5rem">
+    Esta região não possui pontos de coleta.
+    </p>
+    <p>
+        <a href="mailto:lv201122+bateria@gmail.com">Entre em contato conosco</a>
+        <span style="white-space: nowrap">para sugerir novos pontos.</span>
+    </p>
+</li>
+            `;
+            }
+
+            return;
+        }
+
+        for (const chunk of sliceInChunks(collectPoints, 3)) {
+            for (const point of chunk) {
+
+                list.innerHTML += `
 <li class="collect-points-list__item" onclick="onFocusCollectPoint(${point.id})">
     <h2>${point.name}</h2>
     <div class="collect-points-list__item__field">
         <p>${point.address}</p>
     </div>
 </li>
-            `;
+                `;
+            }
+
+            // Wait for the next frame to add a new point.
+            await new Promise(res => requestAnimationFrame(res));
         }
+    }
+
+    function watchBoundsChanged() {
+        // Manual debounce
+        let timeoutId = -1;
+
+        async function updateList() {
+            timeoutId = -1;
+
+            const zoom = map.getZoom();
+
+            if (zoom < interactivityZoom) {
+                await loadList([]);
+                return;
+            }
+
+            const bounds = map.getBounds();
+            const pointsInBounds = collectPoints
+                .filter(x => bounds.contains({
+                    lat: x.latitude,
+                    lng: x.longitude
+                }));
+
+            const center = map.getCenter();
+            const centerLat = center.lat();
+            const centerLng = center.lng();
+
+            pointsInBounds.sort((x, y) => {
+                // Calculate distance using simple trigonometry because the zoom level
+                // is too high for the Earth radius to have any effect on the results.
+                const deltaX1 = centerLng - x.longitude;
+                const deltaY1 = centerLat - x.latitude;
+                const distance1 = Math.sqrt(Math.pow(deltaX1, 2) + Math.pow(deltaY1, 2));
+
+                const deltaX2 = centerLng - y.longitude;
+                const deltaY2 = centerLat - y.latitude;
+                const distance2 = Math.sqrt(Math.pow(deltaX2, 2) + Math.pow(deltaY2, 2));
+
+                return distance1 - distance2;
+            });
+
+            await loadList(pointsInBounds);
+        }
+
+        google.maps.event.addListener(map, 'bounds_changed', async () => {
+            if (timeoutId < 0) {
+                timeoutId = setTimeout(updateList, 500);
+            }
+        });
     }
 
     const collectPoints = getCollectPoints();
@@ -195,6 +281,10 @@ async function loadMap() {
 
     await onRequestAnimationFrame();
     await loadMarkers(collectPoints, map);
+    // Load the list with an empty list to show instructions to the user.
+    await loadList([]);
+
+    watchBoundsChanged();
 }
 
 /**
