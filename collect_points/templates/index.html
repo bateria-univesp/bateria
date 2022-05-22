@@ -40,6 +40,11 @@
 <div id="map"></div>
 {{ collect_points|json_script:'collect_points' }}
 <script src="{% static 'collect_points/index.js' %}" defer></script>
+<!--
+This script must be placed before Google Maps one because the initialization
+(the call to `loadMap`) can only happen when both are loaded.
+-->
+<script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js" defer></script>
 <script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=loadMap"
         defer></script>
 </body>

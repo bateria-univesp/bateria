@@ -35,10 +35,37 @@ function getCollectPoints() {
 }
 
 /**
+ * @returns {Promise<unknown>}
+ */
+function onRequestAnimationFrame() {
+    return new Promise(res => requestAnimationFrame(res));
+}
+
+/**
+ * @template T
+ * @param {T[]} array
+ * @param {number} chunkSize
+ * @return {(T[])[]}
+ */
+function sliceInChunks(array, chunkSize) {
+    if (!Number.isInteger(chunkSize) || chunkSize <= 0) {
+        throw Error(`The parameter 'chunkSize' must be a positive integer.`);
+    }
+
+    const result = [];
+
+    for (let i = 0; i < array.length; i += chunkSize) {
+        result.push(array.slice(i, i + chunkSize));
+    }
+
+    return result;
+}
+
+/**
  * This function can't be renamed because it's the entry point
  * called by the Google Maps JavaScript API.
  */
-function loadMap() {
+async function loadMap() {
     /**
      * @returns {google.maps.Map}
      */
@@ -63,19 +90,21 @@ function loadMap() {
      * @param {CollectPoint[]} collectPoints
      * @param {google.maps.Map} map
      */
-    function loadMarkers(collectPoints, map) {
-        for (const point of collectPoints) {
-            const marker = new google.maps.Marker({
-                position: new google.maps.LatLng(point.latitude, point.longitude),
-                map: map,
-                title: point.name,
-            });
+    async function loadMarkers(collectPoints, map) {
+        const markers = [];
 
-            const navigationUrl = new URL('https://www.google.com/maps/dir/');
-            navigationUrl.searchParams.set('api', 1);
-            navigationUrl.searchParams.set('destination', point.address);
+        for (const chunk of sliceInChunks(collectPoints, 100)) {
+            for (const point of chunk) {
+                const marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(point.latitude, point.longitude),
+                    title: point.name,
+                });
 
-            marker.set('content', `
+                const navigationUrl = new URL('https://www.google.com/maps/dir/');
+                navigationUrl.searchParams.set('api', 1);
+                navigationUrl.searchParams.set('destination', point.address);
+
+                marker.set('content', `
 <div class="map-marker">
     <h1>${point.name}</h1>
     <div class="map-marker-field">
@@ -88,26 +117,55 @@ function loadMap() {
 </div>
             `);
 
-            marker.set('onclick', () => {
-                const minMapZoom = 15;
-                if (map.getZoom() <= minMapZoom) {
-                    map.setZoom(minMapZoom);
-                }
-                map.setCenter(marker.getPosition());
+                marker.set('onclick', () => {
+                    const minMapZoom = 15;
+                    if (map.getZoom() <= minMapZoom) {
+                        map.setZoom(minMapZoom);
+                    }
+                    map.setCenter(marker.getPosition());
 
-                initializeInfoWindowIfNeeded();
-                infoWindow.setContent(marker.get('content'));
-                infoWindow.open({
-                    anchor: marker,
-                    map: map,
-                    shouldFocus: false
+                    initializeInfoWindowIfNeeded();
+                    infoWindow.setContent(marker.get('content'));
+                    infoWindow.open({
+                        anchor: marker,
+                        map: map,
+                        shouldFocus: false
+                    });
                 });
-            });
 
-            marker.addListener('click', () => marker.get('onclick')());
+                marker.addListener('click', () => marker.get('onclick')());
 
-            point.__marker = marker;
+                point.__marker = marker;
+                markers.push(marker);
+            }
+
+            await onRequestAnimationFrame();
         }
+
+        const clusterer = new markerClusterer.MarkerClusterer({
+            map,
+            algorithm: new markerClusterer.SuperClusterAlgorithm({
+                extent: 128,
+                radius: 40,
+                maxZoom: 14,
+                minZoom: 12,
+                minPoints: 3
+            }),
+            renderer: {
+                render: ({count, position}) => new google.maps.Marker({
+                    label: {text: String(count), color: "white", fontSize: "0.625rem"},
+                    position,
+                    // adjust zIndex to be above other markers
+                    zIndex: Number(google.maps.Marker.MAX_ZINDEX) + count,
+                })
+            }
+        });
+
+        google.maps.event.addListener(map, 'tilesloaded', () => {
+            const mapBounds = map.getBounds();
+            clusterer.clearMarkers();
+            clusterer.addMarkers(markers.filter(marker => mapBounds.contains(marker.getPosition())));
+        });
     }
 
     /**
@@ -135,7 +193,8 @@ function loadMap() {
     collectPoints.forEach(x => collectPointsById[x.id] = x);
     map = createMap();
 
-    loadMarkers(collectPoints, map);
+    await onRequestAnimationFrame();
+    await loadMarkers(collectPoints, map);
 }
 
 /**
