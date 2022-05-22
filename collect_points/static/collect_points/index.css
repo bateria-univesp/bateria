@@ -175,6 +175,15 @@ a:active {
         overflow-y: auto;
     }
 
+    .collect-points-list__item {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .collect-points-list__item h2 {
+        font-size: 1rem;
+    }
+
     .collect-points-list__item__field {
         display: none;
     }
