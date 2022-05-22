@@ -3,7 +3,7 @@
  * @typedef {Object} CollectPoint
  * @property {number} id
  * @property {string} name
- * @property {string} description
+ * @property {string} address
  * @property {string} logo_url
  * @property {number} latitude
  * @property {number} longitude
@@ -71,23 +71,36 @@ function loadMap() {
                 title: point.name,
             });
 
+            const navigationUrl = new URL('https://www.google.com/maps/dir/');
+            navigationUrl.searchParams.set('api', 1);
+            navigationUrl.searchParams.set('destination', point.address);
+
             marker.set('content', `
 <div class="map-marker">
     <h1>${point.name}</h1>
     <div class="map-marker-field">
         <small>Endereço</small>
-        <p>${point.description}</p>
+        <p>${point.address}</p>
+    </div>
+    <div class="map-marker-navigate">
+        <a class="button" href="${navigationUrl}" target="_blank">Navigate</a>
     </div>
 </div>
             `);
 
             marker.set('onclick', () => {
+                const minMapZoom = 15;
+                if (map.getZoom() <= minMapZoom) {
+                    map.setZoom(minMapZoom);
+                }
+                map.setCenter(marker.getPosition());
+
                 initializeInfoWindowIfNeeded();
                 infoWindow.setContent(marker.get('content'));
                 infoWindow.open({
                     anchor: marker,
                     map: map,
-                    shouldFocus: true
+                    shouldFocus: false
                 });
             });
 
@@ -111,7 +124,7 @@ function loadMap() {
 <li class="collect-points-list__item" onclick="onFocusCollectPoint(${point.id})">
     <h2>${point.name}</h2>
     <div class="collect-points-list__item__field">
-        <p>${point.description}</p>
+        <p>${point.address}</p>
     </div>
 </li>
             `;

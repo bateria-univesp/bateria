@@ -23,9 +23,33 @@ a:active {
     background-color: rgb(240, 240, 240);
 }
 
+:is(button, .button) {
+    padding: 0.5rem 0.75rem;
+    background-color: gray;
+    color: white;
+    border-radius: 0.25rem;
+    border: 1px solid gray;
+    cursor: pointer;
+    outline: none;
+    text-decoration: none;
+}
+
+:is(button, .button):hover {
+    color: white;
+    background-color: dimgray;
+}
+
+:is(button, .button, input):focus {
+    box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 15%);
+}
+
 #map {
     flex-grow: 1;
     background-color: lightgray;
+}
+
+.map-marker {
+    padding: 0.5rem;
 }
 
 .map-marker h1 {
@@ -36,6 +60,11 @@ a:active {
     color: dimgray;
     display: block;
     margin-bottom: 0.25rem;
+}
+
+.map-marker-navigate {
+    margin-top: 1rem;
+    display: flex;
 }
 
 #search {
@@ -80,21 +109,7 @@ a:active {
 }
 
 .search-input button {
-    padding: 0.5rem 0.75rem;
-    background-color: gray;
-    color: white;
     border-radius: 0 0.25rem 0.25rem 0;
-    border: 1px solid gray;
-    cursor: pointer;
-    outline: none;
-}
-
-.search-input button:hover {
-    background-color: dimgray;
-}
-
-.search-input :is(button, input):focus {
-    box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 15%);
 }
 
 .collect-points-list {
