@@ -188,7 +188,7 @@ async function loadMap() {
 <li class="collect-points-list__loading">
     Aproxime em uma área do mapa
     <br>
-    para ver detalhes de pontos de coleta.
+    para ver detalhes dos pontos de coleta.
 </li>
             `;
             } else {
