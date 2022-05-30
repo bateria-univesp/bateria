@@ -114,7 +114,7 @@ async function loadMap() {
         <p>${point.address}</p>
     </div>
     <div class="map-marker-navigate">
-        <a class="button" href="${navigationUrl}" target="_blank">Navigate</a>
+        <a class="button" href="${navigationUrl}" target="_blank">Navegar</a>
     </div>
 </div>
             `);
