@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+          content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" type="text/css" href="{% static 'collect_points/index.css' %}">
     <script>
@@ -17,19 +17,23 @@
     <h1>Pontos de Coleta</h1>
     <h3>Descubra pontos de coleta de pilhas e bateria na sua localidade.</h3>
     <div class="search-options">
-        <form id="search-form">
-            <label class="search-input">
-                <input type="search" placeholder="Busque no Google Maps" id="search-input" autocomplete="off">
-                <button type="submit">Buscar</button>
+        <form id="search-form" aria-label="Formulário de busca de endereço">
+            <label class="search-input" aria-label="Busque no Google Maps">
+                <input
+                type="search"
+                placeholder="Busque no Google Maps"
+                id="search-input"
+                autocomplete="off">
+            <button type="submit">Buscar</button>
             </label>
         </form>
         <a href="#" id="use-current-location">
             <small>Usar minha localização atual</small>
         </a>
     </div>
-    <ul class="search-list">
+    <ul class="search-list" aria-label="Lista de endereços encontrados na busca">
     </ul>
-    <ul class="collect-points-list">
+    <ul class="collect-points-list" aria-label="Lista de pontos de coleta">
         <li class="collect-points-list__loading">
             Aproxime em uma área do mapa
             <br>
