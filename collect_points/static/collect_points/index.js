@@ -103,6 +103,7 @@ function loadMap() {
     <div class="collect-points-list__item__field">
         <p>${point.description}</p>
     </div>
+    <div class="route-path"></div>
 </li>
             `;
         }
@@ -222,14 +223,14 @@ function onUseCurrentLocation() {
 
 function showSearch(){
     let show_search = document.getElementById('search');
-    let list_button = document.querySelector('#list-button');
+    let button_effect = document.querySelector('.mobile-nav');
     if(show_search.classList.contains('on')){
         show_search.classList.remove('on');
-        list_button.classList.remove('on');
+        button_effect.classList.remove('on');
     }
     else{
         show_search.classList.add('on');
-        list_button.classList.add('on');
+        button_effect.classList.add('on');
 
     }
 };
@@ -237,9 +238,4 @@ function showSearch(){
 window.addEventListener('load', () => {
     document.getElementById('search-form').addEventListener('submit', onSearchSubmit);
     document.getElementById('use-current-location').addEventListener('click', onUseCurrentLocation);
-
-    setTimeout(function(){
-        document.getElementById('loading-section').classList.add('loaded');
-    },1000);
-
 });

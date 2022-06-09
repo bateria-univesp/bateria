@@ -22,9 +22,7 @@
         <form id="search-form">
             <label class="search-input">
                 <input type="search" placeholder="Busque no Google Maps" id="search-input" autocomplete="off">
-                <button type="submit">
-                    <img src="{% static 'collect_points/img/search.png' %}" alt="search">
-                </button>
+                <button type="submit"></button>
             </label>
         </form>
         <a href="#" id="use-current-location">
@@ -40,20 +38,18 @@
     </ul>
 </div>
 <div id="map"></div>
-<nav class="mobile-nav">
-        <ul>
+<button class="mobile-nav" onclick="showSearch()">
+    <div></div>
+    <div></div>
+    <div></div>
+        <!--<ul>
             <li id='list-button' onclick="showSearch()">
                 <hr>
                 <hr>
                 <hr>
             </li>
-        </ul>
-    </nav>
-<section id="loading-section">
-    <div>
-        <img src="{% static 'collect_points/img/logo.svg' %}" alt="logo">
-    </div>
-</section>
+        </ul>-->
+</button>
 {{ collect_points|json_script:'collect_points' }}
 <script src="{% static 'collect_points/index.js' %}" defer></script>
 <script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=loadMap"
