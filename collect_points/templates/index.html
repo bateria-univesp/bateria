@@ -26,7 +26,7 @@
                 placeholder="Busque no Google Maps"
                 id="search-input"
                 autocomplete="off">
-            <button type="submit">Buscar</button>
+            <button type="submit"></button>
             </label>
         </form>
         <a href="#" id="use-current-location">
@@ -48,13 +48,6 @@
     <div></div>
     <div></div>
     <div></div>
-        <!--<ul>
-            <li id='list-button' onclick="showSearch()">
-                <hr>
-                <hr>
-                <hr>
-            </li>
-        </ul>-->
 </button>
 {{ collect_points|json_script:'collect_points' }}
 <script src="{% static 'collect_points/index.js' %}" defer></script>

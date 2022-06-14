@@ -408,5 +408,11 @@ function showSearch(){
 
 window.addEventListener('load', () => {
     document.getElementById('search-form').addEventListener('submit', onSearchSubmit);
-    document.getElementById('use-current-location').addEventListener('click', onUseCurrentLocation);
+    document.getElementById('use-current-location').addEventListener('click', function(){
+        onUseCurrentLocation();
+        showSearch();
+    });
+
+    /*document.getElementById('use-current-location').addEventListener('click', onUseCurrentLocation, showSearch);
+    document.getElementById('use-current-location').addEventListener('click', showSearch);*/
 });
