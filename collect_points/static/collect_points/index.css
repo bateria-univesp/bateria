@@ -13,6 +13,7 @@ body {
 
 a {
     color: gray;
+    transition: 0.5s;
 }
 
 a:hover {
@@ -72,16 +73,18 @@ a:active {
     top: 0;
     bottom: 0;
     left: 0;
-    background: white;
     padding: 2rem 2rem 0 2rem;
-    box-shadow: 0 0 1rem rgba(0, 0, 0, 15%);
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 30%);
     z-index: 1;
+    overflow: hidden;
+    background: white;
     display: flex;
     flex-flow: column;
 }
 
 #search h1 {
     margin-bottom: 0.25rem;
+    color: #333;
 }
 
 #search h3 {
@@ -97,29 +100,53 @@ a:active {
 .search-input {
     display: flex;
     align-items: center;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+    height: 2.5rem;
 }
 
 .search-input input {
     flex-grow: 1;
-    padding: 0.5rem 0.75rem;
+    padding: 0.75rem;
     border-radius: 0.25rem 0 0 0.25rem;
-    border: 1px solid gray;
+    border: 2px solid gray;
+    border-right: 0;
     outline: none;
+    font-size: 16px;
+    color: #333;
+    box-sizing: border-box;
+    transition: .5s;
+    height: 100%;
 }
 
 .search-input button {
+    width: 2.5rem;
+    height: 100%;
+    background-color: gray;
+    box-sizing: border-box;
+    color: white;
+    border: none;
     border-radius: 0 0.25rem 0.25rem 0;
+    cursor: pointer;
+    outline: none;
+    position: relative;
+    background-image: url(img/search-icon.svg);
+    background-position: center;
+    background-size: 55%;
+    background-repeat: no-repeat;
+    transition: .5s;
 }
 
+/*.search-input input:focus, .search-input button:focus{
+    box-shadow: 0 0 0 0.25rem rgb(0 0 0 / 15%);
+}*/
+
 .collect-points-list {
-    flex-grow: 1;
+    height: 60vh;
     display: flex;
     flex-flow: column nowrap;
     list-style: none;
-    margin: 0 -2rem;
+    margin: 0 -2rem 0 -2rem;
     overflow-y: scroll;
-    border-top: 1px solid lightgray;
 }
 
 .collect-points-list__loading {
@@ -133,15 +160,68 @@ a:active {
     display: flex;
     flex-flow: column;
     gap: 0.5rem;
-    background: white;
     /* The 2rem part must match the negative margin in `.collect-points-list`. */
-    padding: 1rem 2rem;
+    padding: 1.5rem 2rem;
     border-bottom: 1px solid lightgray;
     cursor: pointer;
+    transition: .25s;
+    position: relative;
+}
+
+.collect-points-list__item:first-child {
+    border-top: 1px solid lightgray;
+}
+
+.collect-points-list__item h2 {
+    width: 80%;
+    color: #333;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.collect-points-list__item__field p {
+    width: 80%;
+    color: #333;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .collect-points-list__item:hover {
     background-color: rgb(240, 240, 240);
+}
+
+.collect-points-list__item:hover .route-path {
+    background-color: #38ef7d;
+    border-color: #38ef7d;
+}
+
+.route-path {
+    width: 2.5rem;
+    height: 2.5rem;
+    position: absolute;
+    transform: rotate(45deg);
+    right: 2rem;
+    top: calc(50% - (2.5rem / 2));
+    background: transparent;
+    border-radius: 0.25rem;
+    border: 2px gray solid;
+    box-sizing: border-box;
+    overflow: hidden;
+    transition: 0.5s;
+}
+
+.route-path::before {
+    content: "";
+    transform: rotate(-45deg);
+    width: 100%;
+    height: 100%;
+    background-image: url(img/route-icon.svg);
+    background-position: center;
+    background-size: 70%;
+    background-repeat: no-repeat;
+    position: absolute;
+    opacity: 0.7;
+    transition: 0.5s;
 }
 
 .search-list {
@@ -156,28 +236,180 @@ a:active {
     margin-bottom: 0.5rem;
 }
 
-@media screen and (max-width: 576px) {
-    body {
-        flex-flow: column;
-    }
+.mobile-nav {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    bottom: 5%;
+    left: calc(50% - 30px);
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 2;
+    visibility: hidden;
+}
 
+.mobile-nav div {
+    width: 66%;
+    height: 4px;
+    position: absolute;
+    overflow: hidden;
+    border-radius: 20px;
+    transition: .5s;
+}
+
+.mobile-nav div:first-child {
+    top: calc(35% - 4px);
+}
+
+.mobile-nav div:last-child {
+    bottom: calc(35% - 4px);
+}
+
+.mobile-nav div::before, .mobile-nav div::after {
+    content: "";
+    background: white;
+    position: absolute;
+    height: 100%;
+}
+
+.mobile-nav div::before {
+    width: 4px;
+    left: 0;
+    border-radius: 100%;
+}
+
+.mobile-nav:hover {
+
+}
+
+.mobile-nav:focus {
+    box-shadow: none;
+}
+
+.mobile-nav div::after {
+    width: 80%;
+    left: 20%;
+    border-radius: 20px;
+}
+
+.mobile-nav div:first-child::after {
+    width: 65%;
+}
+
+.mobile-nav div:last-child::after {
+    width: 50%;
+}
+
+.mobile-nav.on {
+    background-color: gray !important;
+}
+
+.mobile-nav.on div {
+    background-color: white;
+}
+
+.mobile-nav.on div::before, .mobile-nav.on div::after {
+    opacity: 0;
+}
+
+.mobile-nav.on div:first-child {
+    top: calc(50% - 2px);
+    transform: rotate(45deg);
+}
+
+.mobile-nav.on div:nth-child(2) {
+    opacity: 0;
+}
+
+.mobile-nav.on div:last-child {
+    bottom: calc(50% - 2px);
+    transform: rotate(-45deg);
+}
+
+@media screen and (max-width: 844px) and (min-width: 576px) {
     #search {
-        width: unset;
-        padding-bottom: 0;
+        padding: 2rem 1rem 0 1rem;
     }
 
     #search :is(h1, h3) {
         display: none;
     }
 
+    .route-path {
+        width: 2rem;
+        height: 2rem;
+        top: calc(50% - (2rem / 2));
+    }
+
+    .collect-points-list__item h2, .collect-points-list__item__field p {
+        width: 70%;
+    }
+
+    .collect-points-list__item h2 {
+        font-size: 18px;
+    }
+
+    .collect-points-list__item__field p {
+        font-size: 14px;
+    }
+
+    .collect-points-list__loading {
+        font-size: 12px;
+        line-height: 1.3rem;
+    }
+
+    .search-input input {
+        font-size: 12px;
+        padding: 0.5rem;
+    }
+
+    .search-input button {
+
+    }
+}
+
+@media screen and (max-width: 576px) {
+    body {
+        flex-flow: column;
+    }
+
+    #search {
+        width: 100%;
+        /*bottom: unset;
+        padding-bottom: 0;*/
+        left: -100%;
+        box-sizing: border-box;
+        position: fixed;
+        opacity: 0;
+        transition: .5s;
+    }
+
+    #search.on {
+        left: 0;
+        opacity: 1;
+    }
+
+
+    #search :is(h1, h3) {
+        display: none;
+    }
+
     .search-list, .collect-points-list {
-        max-height: 140px;
+
         overflow-y: auto;
     }
 
     .collect-points-list__item {
         padding-top: 0.5rem;
         padding-bottom: 0.5rem;
+        min-height: 3rem;
+        display: flex;
+        justify-content: center;
+
     }
 
     .collect-points-list__item h2 {
@@ -186,5 +418,9 @@ a:active {
 
     .collect-points-list__item__field {
         display: none;
+    }
+
+    .mobile-nav {
+        visibility: visible;
     }
 }

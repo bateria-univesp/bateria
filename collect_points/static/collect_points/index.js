@@ -192,7 +192,7 @@ async function loadMap() {
 </li>
             `;
             } else {
-              list.innerHTML = `
+                list.innerHTML = `
 <li class="collect-points-list__loading">
     <p style="margin-bottom: 0.5rem">
     Esta região não possui pontos de coleta.
@@ -210,13 +210,13 @@ async function loadMap() {
 
         for (const chunk of sliceInChunks(collectPoints, 3)) {
             for (const point of chunk) {
-
                 list.innerHTML += `
 <li class="collect-points-list__item" onclick="onFocusCollectPoint(${point.id})">
     <h2>${point.name}</h2>
     <div class="collect-points-list__item__field">
         <p>${point.address}</p>
     </div>
+    <div class="route-path"></div>
 </li>
                 `;
             }
@@ -299,6 +299,8 @@ function onFocusCollectPoint(id) {
 
     collectPoint.__marker.getMap().setCenter(collectPoint.__marker.getPosition());
     collectPoint.__marker.get('onclick')();
+
+    closeSearch();
 }
 
 /**
@@ -391,7 +393,44 @@ function onUseCurrentLocation() {
     }
 }
 
+function getSearchAndButton() {
+    return [
+        document.getElementById('search'),
+        document.querySelector('.mobile-nav')
+    ];
+}
+
+function toggleSearch() {
+    const [ search ] = getSearchAndButton();
+
+    if (search.classList.contains('on')) {
+        closeSearch();
+    } else {
+        openSearch();
+    }
+}
+
+function openSearch() {
+    const [ search, button ] = getSearchAndButton();
+
+    search.classList.add('on');
+    button.classList.add('on');
+}
+
+function closeSearch() {
+    const [ search, button ] = getSearchAndButton();
+
+    search.classList.remove('on');
+    button.classList.remove('on');
+}
+
 window.addEventListener('load', () => {
     document.getElementById('search-form').addEventListener('submit', onSearchSubmit);
-    document.getElementById('use-current-location').addEventListener('click', onUseCurrentLocation);
+    document.getElementById('use-current-location').addEventListener('click', function () {
+        onUseCurrentLocation();
+        toggleSearch();
+    });
+
+    /*document.getElementById('use-current-location').addEventListener('click', onUseCurrentLocation, showSearch);
+    document.getElementById('use-current-location').addEventListener('click', showSearch);*/
 });
