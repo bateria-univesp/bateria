@@ -109,13 +109,13 @@ a:active {
     padding: 0.75rem;
     border-radius: 0.25rem 0 0 0.25rem;
     border: 2px solid gray;
-    border-right: 0px;
+    border-right: 0;
     outline: none;
     font-size: 16px;
     color: #333;
     box-sizing: border-box;
     transition: .5s;
-    height:100%;
+    height: 100%;
 }
 
 .search-input button {
@@ -167,16 +167,19 @@ a:active {
     transition: .25s;
     position: relative;
 }
-.collect-points-list__item:first-child{
+
+.collect-points-list__item:first-child {
     border-top: 1px solid lightgray;
 }
-.collect-points-list__item h2{
+
+.collect-points-list__item h2 {
     width: 80%;
     color: #333;
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.collect-points-list__item__field p{
+
+.collect-points-list__item__field p {
     width: 80%;
     color: #333;
     overflow: hidden;
@@ -198,7 +201,7 @@ a:active {
     position: absolute;
     transform: rotate(45deg);
     right: 2rem;
-    top: calc(50% - (2.5rem/2));
+    top: calc(50% - (2.5rem / 2));
     background: transparent;
     border-radius: 0.25rem;
     border: 2px gray solid;
@@ -206,7 +209,8 @@ a:active {
     overflow: hidden;
     transition: 0.5s;
 }
-.route-path::before{
+
+.route-path::before {
     content: "";
     transform: rotate(-45deg);
     width: 100%;
@@ -219,6 +223,7 @@ a:active {
     opacity: 0.7;
     transition: 0.5s;
 }
+
 .search-list {
     list-style: none;
     display: flex;
@@ -238,7 +243,6 @@ a:active {
     border-radius: 10px;
     bottom: 5%;
     left: calc(50% - 30px);
-    background-color: #38ef7d !important;
     border: none;
     display: flex;
     justify-content: center;
@@ -247,6 +251,7 @@ a:active {
     z-index: 2;
     visibility: hidden;
 }
+
 .mobile-nav div {
     width: 66%;
     height: 4px;
@@ -255,30 +260,36 @@ a:active {
     border-radius: 20px;
     transition: .5s;
 }
+
 .mobile-nav div:first-child {
     top: calc(35% - 4px);
 }
+
 .mobile-nav div:last-child {
     bottom: calc(35% - 4px);
 }
-.mobile-nav div::before, .mobile-nav div::after{
-    content:"";
+
+.mobile-nav div::before, .mobile-nav div::after {
+    content: "";
     background: white;
     position: absolute;
     height: 100%;
 }
+
 .mobile-nav div::before {
     width: 4px;
     left: 0;
     border-radius: 100%;
 }
 
-.mobile-nav:hover{
+.mobile-nav:hover {
 
 }
-.mobile-nav:focus{
+
+.mobile-nav:focus {
     box-shadow: none;
 }
+
 .mobile-nav div::after {
     width: 80%;
     left: 20%;
@@ -288,25 +299,32 @@ a:active {
 .mobile-nav div:first-child::after {
     width: 65%;
 }
+
 .mobile-nav div:last-child::after {
     width: 50%;
 }
-.mobile-nav.on{
+
+.mobile-nav.on {
     background-color: gray !important;
 }
-.mobile-nav.on div{
-    background-color: lightgray;
+
+.mobile-nav.on div {
+    background-color: white;
 }
-.mobile-nav.on div::before, .mobile-nav.on div::after{
+
+.mobile-nav.on div::before, .mobile-nav.on div::after {
     opacity: 0;
 }
+
 .mobile-nav.on div:first-child {
     top: calc(50% - 2px);
     transform: rotate(45deg);
 }
-.mobile-nav.on div:nth-child(2){
+
+.mobile-nav.on div:nth-child(2) {
     opacity: 0;
 }
+
 .mobile-nav.on div:last-child {
     bottom: calc(50% - 2px);
     transform: rotate(-45deg);
@@ -316,35 +334,44 @@ a:active {
     #search {
         padding: 2rem 1rem 0 1rem;
     }
+
     #search :is(h1, h3) {
         display: none;
     }
+
     .route-path {
         width: 2rem;
         height: 2rem;
-        top: calc(50% - (2rem/2));
+        top: calc(50% - (2rem / 2));
     }
-    .collect-points-list__item h2, .collect-points-list__item__field p{
+
+    .collect-points-list__item h2, .collect-points-list__item__field p {
         width: 70%;
     }
+
     .collect-points-list__item h2 {
         font-size: 18px;
     }
-    .collect-points-list__item__field p{
+
+    .collect-points-list__item__field p {
         font-size: 14px;
     }
+
     .collect-points-list__loading {
         font-size: 12px;
         line-height: 1.3rem;
     }
+
     .search-input input {
         font-size: 12px;
         padding: 0.5rem;
     }
+
     .search-input button {
 
     }
 }
+
 @media screen and (max-width: 576px) {
     body {
         flex-flow: column;
@@ -355,12 +382,13 @@ a:active {
         /*bottom: unset;
         padding-bottom: 0;*/
         left: -100%;
-        box-sizing:border-box;
+        box-sizing: border-box;
         position: fixed;
         opacity: 0;
         transition: .5s;
     }
-    #search.on{
+
+    #search.on {
         left: 0;
         opacity: 1;
     }
@@ -391,7 +419,8 @@ a:active {
     .collect-points-list__item__field {
         display: none;
     }
-    .mobile-nav{
+
+    .mobile-nav {
         visibility: visible;
     }
 }
