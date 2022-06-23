@@ -141,7 +141,7 @@ a:active {
 }*/
 
 .collect-points-list {
-    height: 60vh;
+    flex-grow: 1;
     display: flex;
     flex-flow: column nowrap;
     list-style: none;
